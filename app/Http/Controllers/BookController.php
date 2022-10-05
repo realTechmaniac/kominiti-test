@@ -22,11 +22,15 @@ class BookController extends Controller
             $url  = $request->get('name') == null  ? $this->baseUrl : $this->baseUrl.'?name='.$request->get('name');
             $response = Http::get($url);
             return response()->json([
-                "data" => $response->getBody()->getContents()
+                "status_code" => 200,
+                "status"      => "success",
+                "data"        => $response->getBody()->getContents()
             ]);
         }catch (\Throwable $th) {
            return response()->json([
-                "message" => $th->getMessage()
+                "status_code" => 500,
+                "status"      => "error",
+                "message"     => $th->getMessage()
            ]);
         }
     }
@@ -150,5 +154,21 @@ class BookController extends Controller
                 "data"        =>  []
             ]);
         }
+    }
+
+    public function searchBooks(Request $request){
+        $query = $request->get('query') ? $request->get('query') : "";
+       
+        $books = Book::where("name", "LIKE", "%$query%")
+                    ->orWhere("publisher", "LIKE", "%$query%")
+                    ->orWhere("release_date", "LIKE", "%$query%")
+                    ->orWhere("country", "LIKE", "%$query%")
+                    ->get();
+
+        return response()->json([
+            'status_code' => 200,
+            'status'      => 'success',
+            'data'        =>  $books
+        ]);
     }
 }

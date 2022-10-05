@@ -20,12 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //API ROUTES
 
+#ICE & FIRE API ROUTE
+
+Route::get('/external-books/', [BookController::class, 'fetchData']);
+
 Route::prefix('v1')->group(function(){
     Route::post('/books', [BookController::class, 'store']);
     Route::get('/books', [BookController::class, 'index']);
+    Route::get('books/search', [BookController::class, "searchBooks"]);
     Route::patch('/books/{id}', [BookController::class, 'update']);
     Route::delete('/books/{id}', [BookController::class, 'destroy']);
     Route::get('/books/{id}', [BookController::class, 'show']);
 });
 
-Route::get('/external-books/{name}', [BookController::class, 'fetchData']);

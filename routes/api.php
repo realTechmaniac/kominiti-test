@@ -25,4 +25,7 @@ Route::prefix('v1')->group(function(){
     Route::get('/books', [BookController::class, 'index']);
     Route::patch('/books/{id}', [BookController::class, 'update']);
     Route::delete('/books/{id}', [BookController::class, 'destroy']);
+    Route::get('/books/{id}', [BookController::class, 'show']);
 });
+
+Route::get('/external-books/{name}', [BookController::class, 'fetchData']);

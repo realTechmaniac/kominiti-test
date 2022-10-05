@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Http;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,11 +9,28 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
+
+    protected $baseUrl = 'https://www.anapioficeandfire.com/api/books';
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function fetchData(Request $request){
+        try {
+            $url  = $request->get('name') == null  ? $this->baseUrl : $this->baseUrl.'?name='.$request->get('name');
+            $response = Http::get($url);
+            return response()->json([
+                "data" => $response->getBody()->getContents()
+            ]);
+        }catch (\Throwable $th) {
+           return response()->json([
+                "message" => $th->getMessage()
+           ]);
+        }
+    }
+
     public function index()
     {
         $books = Book::all();
@@ -52,7 +69,6 @@ class BookController extends Controller
             ]);
         }
 
-        $data = array();
         $book = Book::create([
             "name"            => $request->name,
             "isbn"            => $request->isbn,
@@ -79,9 +95,14 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
+    public function show(Book $book, $id)
     {
-        //
+        $book  = Book::where('id', $id)->get();
+        return response()->json([
+            "status_code" => 200,
+            "status"      => "success",
+            "data"        => $book
+        ]);
     }
 
     /**
@@ -91,26 +112,16 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, $id)
     {
-        //VALIDATE
-        $validate = Validator::make($request->all(), [
-            'name'           => 'required',
-            'isbn'           => 'required',
-            'authors'        => 'required',
-            'country'        => 'required',
-            'number_of_pages'=> 'required',
-            'publisher'      => 'required',
-            'release_date'   => 'required'
-        ]);
-
-        if($validate->fails()){
-            return response()->json([
-                'status_code' => 401,
-                "error"       => $validate->errors()
-            ]);
-        }
-
+       $book    = Book::find($id);
+       $updated = $book->update($request->all());
+       return response()->json([
+         "status_code" => 200,
+         "status"      => "success",
+         "message"     => "The book ".$book->name." was updated successfully.",
+         "data"        => $book
+       ]);
     }
 
     /**

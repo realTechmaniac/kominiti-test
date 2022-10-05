@@ -21,7 +21,7 @@ class CreateBooksTable extends Migration
             $table->string('country');
             $table->integer('number_of_pages');
             $table->string('publisher');
-            $table->string('release_date');
+            $table->date('release_date');
             $table->timestamps();
         });
     }

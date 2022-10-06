@@ -7,9 +7,6 @@ Kindly note the following tips to setup the prooject thank you.:
 - Run migrations to have the tables
 - the API routes are located in the api.php file
 - the BookController handles the logic for the endpoints the model is called Book.
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 
 ## BookController method overview::

@@ -34,7 +34,7 @@ Kindly note the following tips to setup the prooject thank you.:
 
 - PHP 
 
-- Laravel
+- Laravel 8.75
 
 
 Thanks for reading through the guide
